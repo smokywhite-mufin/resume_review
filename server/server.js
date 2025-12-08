@@ -10,8 +10,6 @@ const app = express();
 const PORT = 8000;
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -77,15 +75,11 @@ app.post('/api/resume/upload', upload.single('file'), async (req, res) => {
             const phoneNumberMatches = fullText.match(phoneNumberRegex);
             const phoneNumber = phoneNumberMatches[0].split(':')[1].trim();
 
-            console.log(`Name: ${name}, Phone: ${phoneNumber}`);
-
             const applicantResult = await dbRun(`INSERT INTO applicants (name, phoneNumber) VALUES (?, ?)`, [name, phoneNumber]);
             const applicantId = applicantResult.lastID;
-            console.log(applicantId);
 
             const resumeResult = await dbRun(`INSERT INTO resumes (applicant_id, file_path) VALUES (?, ?)`, [applicantId, pdfPath]);
             const resumeId = resumeResult.lastID;
-            console.log(resumeId);
 
             res.status(200).json(
                 {
