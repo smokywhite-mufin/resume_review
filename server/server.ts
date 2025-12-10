@@ -62,6 +62,18 @@ const dbGet = <T>(sql: string, params: any[] = []): Promise<T> => {
   });
 };
 
+const dbGetAll = <T>(sql: string, params: any[] = []): Promise<T[]> => {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err: Error | null, rows: T[]) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
 (async () => {
   try {
     await fs.mkdir("uploads", { recursive: true });
@@ -244,6 +256,17 @@ const callGroq = async (messages: Messages[]) => {
   const result = await response.json();
   return result.choices[0].message.content;
 };
+
+app.get("/api/resumes", async (req: Request, res: Response) => {
+  try {
+    const resumes = await dbGetAll<Resume>(
+      `SELECT * FROM resumes ORDER BY updated_at DESC`
+    );
+    res.status(200).json(resumes);
+  } catch (error: unknown) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`서버가 ${PORT}번 포트에서 실행 중입니다.`);
