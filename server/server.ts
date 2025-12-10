@@ -99,11 +99,12 @@ app.post(
       pdfParser.getText().then(async (pdfData: TextResult) => {
         const fullText = pdfData.text;
 
-        const nameRegex = /이름:\s*([가-힣]{2,4})/;
+        const nameRegex = /(?:이름|성명|Name|name)\s*[:：]\s*(.+?)(?:\n|$)/;
         const nameMatches = fullText.match(nameRegex);
         const name = nameMatches ? nameMatches[1].trim() : "unknown";
 
-        const phoneNumberRegex = /전화번호:\s*(\d{3}-\d{4}-\d{4})/;
+        const phoneNumberRegex =
+          /(?:전화번호|연락처|휴대폰|휴대전화|Phone|Mobile|phone|mobile|Tel|tel)\s*[:：]\s*(.+?)(?:\n|$)/;
         const phoneNumberMatches = fullText.match(phoneNumberRegex);
         const phoneNumber = phoneNumberMatches
           ? phoneNumberMatches[1].trim()
