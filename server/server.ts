@@ -7,7 +7,10 @@ import multer from "Multer";
 import sqlite3 from "sqlite3";
 import path from "path";
 import fs from "fs/promises";
+import dotenv from "dotenv";
+import { Messages, Resume } from "./types";
 
+dotenv.config();
 
 const app = express();
 const PORT = 8000;
@@ -47,6 +50,18 @@ const dbRun = (sql: string, params: any[] = []): Promise<RunResult> => {
   });
 };
 
+const dbGet = <T>(sql: string, params: any[] = []): Promise<T> => {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err: Error | null, row: T) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+};
+
 (async () => {
   try {
     await dbRun(`CREATE TABLE IF NOT EXISTS applicants (
@@ -59,6 +74,8 @@ const dbRun = (sql: string, params: any[] = []): Promise<RunResult> => {
             resume_id INTEGER PRIMARY KEY AUTOINCREMENT,
             applicant_id INTEGER NOT NULL,
             file_path TEXT NOT NULL,
+            analyze_result TEXT,
+            question_list TEXT,
             FOREIGN KEY (applicant_id) REFERENCES applicants (applicant_id)
         )`);
   } catch (err) {
@@ -116,6 +133,104 @@ app.post(
     }
   }
 );
+
+app.post(
+  "/api/resumes/:resumeId/analyze",
+  async (req: Request, res: Response) => {
+    const resumeId = req.params.resumeId;
+
+    try {
+      const resume = await dbGet<Resume>(
+        `SELECT * FROM resumes WHERE resume_id = ?`,
+        [resumeId]
+      );
+
+      if (!resume) {
+        return res.status(404).json({ error: "Resume not found" });
+      }
+      const filePath: string = resume.file_path;
+
+      const data = await fs.readFile(filePath);
+      const pdfParser = new PDFParse({ data: data });
+      pdfParser.getText().then(async (pdfData: TextResult) => {
+        const fullText = pdfData.text;
+        const analyzeResult = await callGroq([
+          {
+            role: "system",
+            content:
+              "너는 채용 담당자야. 이력서를 분석해서 강점, 기술스택, 총점(0~100)을 JSON 형식으로 제공해줘.",
+          },
+          {
+            role: "user",
+            content: `이력서 내용:\n${fullText}`,
+          },
+        ]);
+        const analyzeResultJson = JSON.parse(analyzeResult);
+
+        const questionList = await callGroq([
+          {
+            role: "system",
+            content:
+              "너는 시니어 개발자이자 기술 면접관이야. 아래 이력서 분석 내용과 회사 요구사항을 참고하여 해당 지원자가 우리 회사에 적합한지 확인하는 기술 질문(총점 관련 질문 제외)만 30개 만들어서 JSON 형식으로 제공해줘.",
+          },
+          {
+            role: "user",
+            content: `지원자 이력서 분석 내용: ${JSON.stringify(
+              analyzeResultJson,
+              null,
+              2
+            )}
+            
+            회사 요구사항: ${"JavaScript, Node.js의 기본적 이해, HTML/CSS로 간단한 웹 페이지 구현 가능, HTTP통신과 웹이 어떻게 동작하는지에 대한 기본적인 이해"}
+            `,
+          },
+        ]);
+        const questionListJson = JSON.parse(questionList);
+
+        await dbRun(
+          `UPDATE resumes SET analyze_result = ?, question_list = ? WHERE resume_id = ?`,
+          [
+            JSON.stringify(analyzeResultJson),
+            JSON.stringify(questionListJson),
+            resumeId,
+          ]
+        );
+
+        res.status(200).json({
+          message: "Resume analyzed successfully",
+          data: {
+            analyzeResultJson,
+            questionListJson,
+          },
+        });
+      });
+    } catch (error: unknown) {
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+);
+
+const callGroq = async (messages: Messages[]) => {
+  const response = await fetch(
+    "https://api.groq.com/openai/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: messages,
+        temperature: 0,
+        response_format: { type: "json_object" },
+      }),
+    }
+  );
+
+  const result = await response.json();
+  return result.choices[0].message.content;
+};
 
 app.listen(PORT, () => {
   console.log(`서버가 ${PORT}번 포트에서 실행 중입니다.`);
