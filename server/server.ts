@@ -64,10 +64,13 @@ const dbGet = <T>(sql: string, params: any[] = []): Promise<T> => {
 
 (async () => {
   try {
+    await fs.mkdir("uploads", { recursive: true });
+
     await dbRun(`CREATE TABLE IF NOT EXISTS applicants (
             applicant_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            phoneNumber TEXT NOT NULL
+            phoneNumber TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )`);
 
     await dbRun(`CREATE TABLE IF NOT EXISTS resumes (
@@ -76,6 +79,8 @@ const dbGet = <T>(sql: string, params: any[] = []): Promise<T> => {
             file_path TEXT NOT NULL,
             analyze_result TEXT,
             question_list TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (applicant_id) REFERENCES applicants (applicant_id)
         )`);
   } catch (err) {
@@ -110,15 +115,17 @@ app.post(
           ? phoneNumberMatches[1].trim()
           : "unknown";
 
+        const now = new Date().toISOString();
+
         const applicantResult = await dbRun(
-          `INSERT INTO applicants (name, phoneNumber) VALUES (?, ?)`,
-          [name, phoneNumber]
+          `INSERT INTO applicants (name, phoneNumber, created_at) VALUES (?, ?, ?)`,
+          [name, phoneNumber, now]
         );
         const applicantId = applicantResult.lastID;
 
         const resumeResult = await dbRun(
-          `INSERT INTO resumes (applicant_id, file_path) VALUES (?, ?)`,
-          [applicantId, pdfPath]
+          `INSERT INTO resumes (applicant_id, file_path, created_at, updated_at) VALUES (?, ?, ?, ?)`,
+          [applicantId, pdfPath, now, now]
         );
         const resumeId = resumeResult.lastID;
 
@@ -127,6 +134,7 @@ app.post(
           name: name,
           resume_id: resumeId,
           applicant_id: applicantId,
+          created_at: now,
         });
       });
     } catch (error: unknown) {
@@ -188,11 +196,14 @@ app.post(
         ]);
         const questionListJson = JSON.parse(questionList);
 
+        const now = new Date().toISOString();
+
         await dbRun(
-          `UPDATE resumes SET analyze_result = ?, question_list = ? WHERE resume_id = ?`,
+          `UPDATE resumes SET analyze_result = ?, question_list = ?, updated_at = ? WHERE resume_id = ?`,
           [
             JSON.stringify(analyzeResultJson),
             JSON.stringify(questionListJson),
+            now,
             resumeId,
           ]
         );
@@ -202,6 +213,7 @@ app.post(
           data: {
             analyzeResultJson,
             questionListJson,
+            updated_at: now,
           },
         });
       });
