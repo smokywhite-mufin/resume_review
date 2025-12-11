@@ -10,6 +10,36 @@ import {
 } from "../constants/prompts";
 
 export const uploadResume = async (req: Request, res: Response) => {
+  /*
+    #swagger.tags = ['Resume']
+    #swagger.summary = '이력서 업로드'
+    #swagger.description = 'PDF 이력서 파일을 업로드합니다.'
+    #swagger.consumes = ['multipart/form-data']
+    #swagger.parameters['file'] = {
+      in: 'formData',
+      type: 'file',
+      required: true,
+      description: '업로드할 PDF 이력서 파일'
+    }
+    #swagger.responses[200] = {
+      description: '업로드 성공',
+      schema: {
+        message: 'File uploaded successfully',
+        name: '홍길동',
+        resume_id: 1,
+        applicant_id: 1,
+        created_at: '2024-01-01T00:00:00.000Z'
+      }
+    }
+    #swagger.responses[400] = {
+      description: '파일 없음',
+      schema: { error: 'No file uploaded' }
+    }
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      schema: { error: '에러 메시지' }
+    }
+  */
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
@@ -47,6 +77,50 @@ export const uploadResume = async (req: Request, res: Response) => {
 };
 
 export const analyzeResume = async (req: Request, res: Response) => {
+  /*
+    #swagger.tags = ['Resume']
+    #swagger.summary = '이력서 분석'
+    #swagger.description = 'AI를 사용하여 이력서를 분석하고 면접 질문을 생성합니다.'
+    #swagger.parameters['resumeId'] = {
+      in: 'path',
+      type: 'integer',
+      required: true,
+      description: '분석할 이력서 ID'
+    }
+    #swagger.responses[200] = {
+      description: '분석 성공',
+      schema: {
+        message: 'Resume analyzed successfully',
+        data: {
+          analyzeResultJson: {
+            '이름': '홍길동',
+            '생년월일': '1990.01.01',
+            '연락처': '010-1234-5678',
+            '이메일': 'example@email.com',
+            'Github': 'https://github.com/username',
+            '강점': ['문제해결능력', '협업과 소통'],
+            '기술스택': ['JavaScript', 'TypeScript', 'React', 'Node.js'],
+            '총점': 85
+          },
+          questionListJson: {
+            '질문': [
+              'JavaScript의 클로저에 대해 설명해주세요.',
+              'React Hooks에 대해 설명해주세요.'
+            ]
+          },
+          updated_at: '2024-01-01T00:00:00.000Z'
+        }
+      }
+    }
+    #swagger.responses[404] = {
+      description: '이력서를 찾을 수 없음',
+      schema: { error: 'Resume not found' }
+    }
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      schema: { error: '에러 메시지' }
+    }
+  */
   const resumeId = req.params.resumeId;
 
   try {
@@ -112,6 +186,27 @@ export const analyzeResume = async (req: Request, res: Response) => {
 };
 
 export const getAllResumes = async (req: Request, res: Response) => {
+  /*
+    #swagger.tags = ['Resume']
+    #swagger.summary = '모든 이력서 조회'
+    #swagger.description = '저장된 모든 이력서 목록을 조회합니다. analyze_result와 question_list는 JSON 문자열 형태입니다.'
+    #swagger.responses[200] = {
+      description: '조회 성공',
+      schema: [{
+        resume_id: 1,
+        applicant_id: 1,
+        file_path: 'uploads/1234567890.pdf',
+        analyze_result: '{"이름":"홍길동","생년월일":"1990.01.01","연락처":"010-1234-5678","이메일":"example@email.com","Github":"https://github.com/username","강점":["문제해결능력"],"기술스택":["JavaScript","React"],"총점":85}',
+        question_list: '{"질문":["JavaScript의 클로저에 대해 설명해주세요.","React Hooks에 대해 설명해주세요."]}',
+        created_at: '2024-01-01T00:00:00.000Z',
+        updated_at: '2024-01-01T00:00:00.000Z'
+      }]
+    }
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      schema: { error: '에러 메시지' }
+    }
+  */
   try {
     const resumes = await resumeRepository.findAllResumes();
     res.status(200).json(resumes);
@@ -119,4 +214,3 @@ export const getAllResumes = async (req: Request, res: Response) => {
     res.status(500).json({ error: (error as Error).message });
   }
 };
-

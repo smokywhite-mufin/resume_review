@@ -3,17 +3,15 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { initializeDatabase } from "./config/database";
 import resumeRoutes from "./routes/resume.routes";
-import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
-import path from "path";
+import swaggerJson from "./swagger/swagger.json";
 
 dotenv.config();
 
 const app = express();
 const PORT = 8000;
 
-const swaggerSpec: any = YAML.load(path.resolve(__dirname, "swagger.yaml"));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 console.log("Server starting...");
 app.use(cors());

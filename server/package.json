@@ -8,8 +8,7 @@
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
-    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml",
-    "predev": "npm run api-docs"
+    "gen-swagger": "ts-node src/swagger/swagger.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +22,7 @@
     "pdf-parse": "^2.4.5",
     "sqlite3": "^5.1.7",
     "swagger-cli": "^4.0.4",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
@@ -35,6 +35,7 @@
     "@types/sqlite3": "^3.1.11",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/yamljs": "^0.2.34",
+    "swagger-autogen": "^2.23.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
