@@ -1,0 +1,231 @@
+openapi: 3.0.0
+info:
+  version: 0.4.0
+  title: Resume Analysis API
+  description: 이력서 분석 및 면접 질문 생성 API
+  license:
+    name: ryeong
+servers:
+  - url: 'http://localhost:8000'
+paths:
+  /api/resume/upload:
+    post:
+      tags:
+        - Resume
+      summary: 이력서 업로드
+      description: PDF 이력서 파일을 업로드하고 지원자 정보를 추출합니다
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: PDF 이력서 파일
+              required:
+                - file
+      responses:
+        '200':
+          description: 업로드 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+              example:
+                message: File uploaded successfully
+                name: 홍길동
+                resume_id: 1
+                applicant_id: 1
+                created_at: '2024-12-11T10:30:00.000Z'
+        '400':
+          description: 파일 없음
+          content:
+            application/json:
+              example:
+                error: No file uploaded
+        '500':
+          description: 서버 에러
+          content:
+            application/json:
+              example:
+                error: Error message
+  /api/resumes:
+    get:
+      tags:
+        - Resume
+      summary: 이력서 목록 조회
+      description: 모든 이력서 목록을 최신순으로 조회합니다
+      responses:
+        '200':
+          description: 이력서 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Resume'
+              example:
+                - resume_id: 1
+                  applicant_id: 1
+                  file_path: uploads/1702345678901.pdf
+                  analyze_result: '{"strengths":["JavaScript 숙련"],"techStack":["Node.js","React"],"totalScore":85}'
+                  question_list: '["Node.js의 이벤트 루프에 대해 설명해주세요"]'
+                  created_at: '2024-12-11T10:30:00.000Z'
+                  updated_at: '2024-12-11T10:35:00.000Z'
+                - resume_id: 2
+                  applicant_id: 2
+                  file_path: uploads/1702345678902.pdf
+                  analyze_result: '{"strengths":["JavaScript 숙련"],"techStack":["Node.js","React"],"totalScore":85}'
+                  question_list: '["Node.js의 이벤트 루프에 대해 설명해주세요"]'
+                  created_at: '2024-12-11T11:00:00.000Z'
+                  updated_at: '2024-12-11T11:00:00.000Z'
+        '500':
+          description: 서버 에러
+          content:
+            application/json:
+              example:
+                error: Error message
+  '/api/resumes/{resumeId}/analyze':
+    post:
+      tags:
+        - Resume
+      summary: 이력서 분석
+      description: AI를 사용하여 이력서를 분석하고 면접 질문을 생성합니다
+      parameters:
+        - name: resumeId
+          in: path
+          required: true
+          description: 분석할 이력서 ID
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: 분석 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyzeResponse'
+              example:
+                message: Resume analyzed successfully
+                data:
+                  analyzeResultJson:
+                    strengths:
+                      - JavaScript/TypeScript 숙련
+                      - Node.js 백엔드 개발 경험
+                      - React 프론트엔드 개발 가능
+                    techStack:
+                      - JavaScript
+                      - TypeScript
+                      - Node.js
+                      - Express
+                      - React
+                      - PostgreSQL
+                    totalScore: 85
+                  questionListJson:
+                    - Node.js의 이벤트 루프에 대해 설명해주세요.
+                    - RESTful API 설계 원칙에 대해 말씀해주세요.
+                    - React의 Virtual DOM이 무엇인가요?
+                    - HTTP와 HTTPS의 차이점은 무엇인가요?
+                    - '데이터베이스 인덱스란 무엇이고, 언제 사용하나요?'
+                  updated_at: '2024-12-11T10:35:00.000Z'
+        '500':
+          description: 서버 에러
+          content:
+            application/json:
+              example:
+                error: Error message
+components:
+  schemas:
+    Resume:
+      type: object
+      properties:
+        resume_id:
+          type: integer
+          description: 이력서 ID
+        applicant_id:
+          type: integer
+          description: 지원자 ID
+        file_path:
+          type: string
+          description: 파일 경로
+        analyze_result:
+          type: string
+          nullable: true
+          description: 분석 결과 (JSON 문자열)
+        question_list:
+          type: string
+          nullable: true
+          description: 면접 질문 목록 (JSON 문자열)
+        created_at:
+          type: string
+          format: date-time
+          description: 생성일시
+        updated_at:
+          type: string
+          format: date-time
+          description: 수정일시
+    UploadResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 결과 메시지
+        name:
+          type: string
+          description: 추출된 지원자 이름
+        resume_id:
+          type: integer
+          description: 생성된 이력서 ID
+        applicant_id:
+          type: integer
+          description: 생성된 지원자 ID
+        created_at:
+          type: string
+          format: date-time
+          description: 생성일시
+    AnalyzeResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 결과 메시지
+        data:
+          type: object
+          properties:
+            analyzeResultJson:
+              type: object
+              properties:
+                strengths:
+                  type: array
+                  items:
+                    type: string
+                  description: 지원자 강점 목록
+                techStack:
+                  type: array
+                  items:
+                    type: string
+                  description: 기술 스택 목록
+                totalScore:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                  description: 총점 (0~100)
+            questionListJson:
+              type: array
+              items:
+                type: string
+              description: 면접 질문 목록 (30개)
+            updated_at:
+              type: string
+              format: date-time
+              description: 분석 완료 일시
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: 에러 메시지
