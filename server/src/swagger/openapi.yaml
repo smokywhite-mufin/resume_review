@@ -73,15 +73,15 @@ paths:
                 - resume_id: 1
                   applicant_id: 1
                   file_path: "uploads/1702345678901.pdf"
-                  analyze_result: '{"strengths":["JavaScript 숙련"],"techStack":["Node.js","React"],"totalScore":85}'
-                  question_list: '["Node.js의 이벤트 루프에 대해 설명해주세요"]'
+                  analyze_result: '{"이름":"홍길동","생년월일":"1995.01.15","연락처":"010-1234-5678","이메일":"hong@example.com","Github 주소":"https://github.com/honggildong","강점":["문제 해결 능력이 뛰어남","새로운 기술 학습에 적극적"],"기술스택":["JavaScript","React","Node.js"],"총점":85}'
+                  question_list: '{"질문":["JavaScript의 이벤트 루프에 대해 설명해주세요.","React의 생명주기에 대해 설명해주세요."]}'
                   created_at: "2024-12-11T10:30:00.000Z"
                   updated_at: "2024-12-11T10:35:00.000Z"
                 - resume_id: 2
                   applicant_id: 2
                   file_path: "uploads/1702345678902.pdf"
-                  analyze_result: '{"strengths":["JavaScript 숙련"],"techStack":["Node.js","React"],"totalScore":85}'
-                  question_list: '["Node.js의 이벤트 루프에 대해 설명해주세요"]'
+                  analyze_result: '{"이름":"김철수","생년월일":"1998.05.20","연락처":"010-9876-5432","이메일":"kim@example.com","Github 주소":null,"강점":["꼼꼼한 코드 리뷰","팀 협업 능력 우수"],"기술스택":["TypeScript","Next.js","Express"],"총점":78}'
+                  question_list: '{"질문":["TypeScript의 장점에 대해 설명해주세요.","Next.js의 SSR과 SSG 차이점은 무엇인가요?"]}'
                   created_at: "2024-12-11T11:00:00.000Z"
                   updated_at: "2024-12-11T11:00:00.000Z"
         "500":
@@ -116,24 +116,32 @@ paths:
                 message: "Resume analyzed successfully"
                 data:
                   analyzeResultJson:
-                    strengths:
-                      - "JavaScript/TypeScript 숙련"
-                      - "Node.js 백엔드 개발 경험"
-                      - "React 프론트엔드 개발 가능"
-                    techStack:
+                    이름: "홍길동"
+                    생년월일: "1995.01.15"
+                    연락처: "010-1234-5678"
+                    이메일: "hong@example.com"
+                    Github 주소: "https://github.com/honggildong"
+                    강점:
+                      - "문제 해결 능력이 뛰어나며 복잡한 이슈도 체계적으로 접근합니다."
+                      - "새로운 기술 학습에 적극적이고 빠르게 적응합니다."
+                      - "팀원들과의 원활한 소통으로 협업 효율을 높입니다."
+                    기술스택:
                       - "JavaScript"
                       - "TypeScript"
+                      - "React"
                       - "Node.js"
                       - "Express"
-                      - "React"
-                      - "PostgreSQL"
-                    totalScore: 85
+                      - "HTML"
+                      - "CSS"
+                      - "Git"
+                    총점: 85
                   questionListJson:
-                    - "Node.js의 이벤트 루프에 대해 설명해주세요."
-                    - "RESTful API 설계 원칙에 대해 말씀해주세요."
-                    - "React의 Virtual DOM이 무엇인가요?"
-                    - "HTTP와 HTTPS의 차이점은 무엇인가요?"
-                    - "데이터베이스 인덱스란 무엇이고, 언제 사용하나요?"
+                    질문:
+                      - "JavaScript의 var, let, const 차이점에 대해 설명해주세요."
+                      - "Node.js의 이벤트 루프에 대해 설명해주세요."
+                      - "HTML의 시맨틱 태그란 무엇인가요?"
+                      - "HTTP 요청 메서드의 종류와 용도에 대해 설명해주세요."
+                      - "웹 브라우저가 URL을 입력받고 화면을 렌더링하는 과정을 설명해주세요."
                   updated_at: "2024-12-11T10:35:00.000Z"
         "500":
           description: 서버 에러
@@ -205,26 +213,49 @@ components:
             analyzeResultJson:
               type: object
               properties:
-                strengths:
+                이름:
+                  type: string
+                  nullable: true
+                  description: 지원자 이름
+                생년월일:
+                  type: string
+                  nullable: true
+                  description: 생년월일
+                연락처:
+                  type: string
+                  nullable: true
+                  description: 연락처
+                이메일:
+                  type: string
+                  nullable: true
+                  description: 이메일 주소
+                Github 주소:
+                  type: string
+                  nullable: true
+                  description: Github 프로필 URL
+                강점:
                   type: array
                   items:
                     type: string
                   description: 지원자 강점 목록
-                techStack:
+                기술스택:
                   type: array
                   items:
                     type: string
                   description: 기술 스택 목록
-                totalScore:
+                총점:
                   type: integer
                   minimum: 0
                   maximum: 100
                   description: 총점 (0~100)
             questionListJson:
-              type: array
-              items:
-                type: string
-              description: 면접 질문 목록 (30개)
+              type: object
+              properties:
+                질문:
+                  type: array
+                  items:
+                    type: string
+                  description: 면접 질문 목록 (30개)
             updated_at:
               type: string
               format: date-time
