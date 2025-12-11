@@ -9,6 +9,6 @@
     "outDir": "dist",
     "types": ["node", "express", "Multer"]
   },
-  "include": ["./server.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

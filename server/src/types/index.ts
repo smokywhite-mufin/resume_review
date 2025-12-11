@@ -1,3 +1,5 @@
+import { RunResult } from "sqlite3";
+
 export interface Resume {
   resume_id: number;
   applicant_id: number;
@@ -12,3 +14,6 @@ export interface Messages {
   role: "system" | "user";
   content: string | string[];
 }
+
+export { RunResult };
+
