@@ -30,4 +30,8 @@ export interface ServerError {
   error: string;
 }
 
+export interface SuccessResponse {
+  message: string;
+}
 export { RunResult };
+

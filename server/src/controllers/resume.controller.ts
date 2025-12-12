@@ -8,8 +8,14 @@ import {
   INTERVIEW_QUESTION_SYSTEM_PROMPT,
   JOB_REQUIREMENTS,
 } from "../constants/prompts";
-import { AnalyzeResponse, ServerError, UploadResponse } from "../types";
+import {
+  AnalyzeResponse,
+  ServerError,
+  SuccessResponse,
+  UploadResponse,
+} from "../types";
 import { Resume } from "../models/Resume";
+import { deleteFile } from "../middleware/upload.middleware";
 
 export const uploadResume = async (
   req: Request,
@@ -91,7 +97,7 @@ export const analyzeResume = async (
     #swagger.description = 'AI를 사용하여 이력서를 분석하고 면접 질문을 생성합니다.'
     #swagger.parameters['resumeId'] = {
       in: 'path',
-      type: 'integer',
+      type: 'string',
       required: true,
       description: '분석할 이력서 ID'
     }
@@ -222,6 +228,54 @@ export const getAllResumes = async (
   try {
     const resumes = await resumeRepository.findAllResumes();
     res.status(200).json(resumes);
+  } catch (error: unknown) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const removeResume = async (
+  req: Request,
+  res: Response<SuccessResponse | ServerError>
+) => {
+  /*
+    #swagger.tags = ['Resume']
+    #swagger.summary = '이력서 삭제'
+    #swagger.description = '이력서를 삭제합니다.'
+    #swagger.parameters['resumeId'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: '삭제할 이력서 ID'
+    }
+    #swagger.responses[200] = {
+      description: '삭제 성공',
+      schema: {
+        message: 'Resume deleted successfully'
+      }
+    }
+    #swagger.responses[404] = {
+      description: '이력서를 찾을 수 없음',
+      schema: { error: 'Resume not found' }
+    }
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      schema: { error: '에러 메시지' }
+    }
+  */
+  const resumeId = req.params.resumeId;
+
+  try {
+    const resume = await resumeRepository.findResumeById(resumeId);
+
+    if (!resume) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
+
+    await resumeRepository.removeResume(resumeId);
+    deleteFile(resume.file_path);
+    await applicantRepository.removeApplicant(resume.applicant_id);
+
+    res.status(200).json({ message: "Resume deleted successfully" });
   } catch (error: unknown) {
     res.status(500).json({ error: (error as Error).message });
   }

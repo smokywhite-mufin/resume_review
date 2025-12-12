@@ -12,3 +12,6 @@ export const createApplicant = async (
   return result.lastID;
 };
 
+export const removeApplicant = async (applicantId:number): Promise<void> => {
+  await dbRun(`DELETE FROM applicants WHERE applicant_id = ?`, [applicantId]);
+}

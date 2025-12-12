@@ -37,3 +37,7 @@ export const updateResumeAnalysis = async (
     ]
   );
 };
+
+export const removeResume = async (resumeId: string): Promise<void> => {
+  await dbRun(`DELETE FROM resumes WHERE resume_id = ?`, [resumeId]);
+};
