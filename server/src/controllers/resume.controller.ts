@@ -8,8 +8,13 @@ import {
   INTERVIEW_QUESTION_SYSTEM_PROMPT,
   JOB_REQUIREMENTS,
 } from "../constants/prompts";
+import { AnalyzeResponse, ServerError, UploadResponse } from "../types";
+import { Resume } from "../models/Resume";
 
-export const uploadResume = async (req: Request, res: Response) => {
+export const uploadResume = async (
+  req: Request,
+  res: Response<UploadResponse | ServerError>
+) => {
   /*
     #swagger.tags = ['Resume']
     #swagger.summary = '이력서 업로드'
@@ -76,7 +81,10 @@ export const uploadResume = async (req: Request, res: Response) => {
   }
 };
 
-export const analyzeResume = async (req: Request, res: Response) => {
+export const analyzeResume = async (
+  req: Request,
+  res: Response<AnalyzeResponse | ServerError>
+) => {
   /*
     #swagger.tags = ['Resume']
     #swagger.summary = '이력서 분석'
@@ -95,18 +103,17 @@ export const analyzeResume = async (req: Request, res: Response) => {
           analyzeResultJson: {
             '이름': '홍길동',
             '생년월일': '1990.01.01',
-            '연락처': '010-1234-5678',
             '이메일': 'example@email.com',
-            'Github': 'https://github.com/username',
-            '강점': ['문제해결능력', '협업과 소통'],
+            '연락처': '010-1234-5678',
+            '깃허브 주소': 'https://github.com/username',
+            '그 이외의 주소': 'https://blog.example.com',
             '기술스택': ['JavaScript', 'TypeScript', 'React', 'Node.js'],
+            '프로젝트': ['프로젝트 1', '프로젝트 2'],
+            '강점': ['문제해결능력', '협업과 소통'],
             '총점': 85
           },
           questionListJson: {
-            '질문': [
-              'JavaScript의 클로저에 대해 설명해주세요.',
-              'React Hooks에 대해 설명해주세요.'
-            ]
+            '기술 질문': [ 'JavaScript의 클로저에 대해 설명해주세요.', 'React Hooks에 대해 설명해주세요.']
           },
           updated_at: '2024-01-01T00:00:00.000Z'
         }
@@ -139,7 +146,9 @@ export const analyzeResume = async (req: Request, res: Response) => {
       },
       {
         role: "user",
-        content: `이력서 내용:\n${fullText}`,
+        content: `이력서 내용:\n${fullText}
+                  회사 요구사항: ${JOB_REQUIREMENTS}
+                  `,
       },
     ]);
     const analyzeResultJson = JSON.parse(analyzeResult);
@@ -185,7 +194,10 @@ export const analyzeResume = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllResumes = async (req: Request, res: Response) => {
+export const getAllResumes = async (
+  req: Request,
+  res: Response<Resume[] | ServerError>
+) => {
   /*
     #swagger.tags = ['Resume']
     #swagger.summary = '모든 이력서 조회'
@@ -197,7 +209,7 @@ export const getAllResumes = async (req: Request, res: Response) => {
         applicant_id: 1,
         file_path: 'uploads/1234567890.pdf',
         analyze_result: '{"이름":"홍길동","생년월일":"1990.01.01","연락처":"010-1234-5678","이메일":"example@email.com","Github":"https://github.com/username","강점":["문제해결능력"],"기술스택":["JavaScript","React"],"총점":85}',
-        question_list: '{"질문":["JavaScript의 클로저에 대해 설명해주세요.","React Hooks에 대해 설명해주세요."]}',
+        question_list: '{"질문":[{"질문":"JavaScript의 클로저에 대해 설명해주세요.","분류":"JavaScript"}]}',
         created_at: '2024-01-01T00:00:00.000Z',
         updated_at: '2024-01-01T00:00:00.000Z'
       }]

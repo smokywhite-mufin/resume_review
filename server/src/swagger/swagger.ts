@@ -10,8 +10,8 @@ const doc = {
     description: "이력서 분석 API - 이력서 업로드, AI 분석, 면접 질문 생성",
     version: "1.0.0",
   },
-  host: "localhost:3000",
-  basePath: "/",
+  host: "localhost:8000",
+  basePath: "/api",
   schemes: ["http"],
   tags: [
     {

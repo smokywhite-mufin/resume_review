@@ -1,5 +1,5 @@
 import { dbRun, dbGet, dbGetAll } from "../config/database";
-import { Resume } from "../types";
+import { Resume } from "../models/Resume";
 
 export const createResume = async (
   applicantId: number,
@@ -29,7 +29,11 @@ export const updateResumeAnalysis = async (
 ): Promise<void> => {
   await dbRun(
     `UPDATE resumes SET analyze_result = ?, question_list = ?, updated_at = ? WHERE resume_id = ?`,
-    [JSON.stringify(analyzeResultJson), JSON.stringify(questionListJson), now, resumeId]
+    [
+      JSON.stringify(analyzeResultJson),
+      JSON.stringify(questionListJson),
+      now,
+      resumeId,
+    ]
   );
 };
-

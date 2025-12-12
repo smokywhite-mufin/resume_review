@@ -5,8 +5,8 @@
     "description": "이력서 분석 API - 이력서 업로드, AI 분석, 면접 질문 생성",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
-  "basePath": "/",
+  "host": "localhost:8000",
+  "basePath": "/api",
   "tags": [
     {
       "name": "Resume",
@@ -141,27 +141,21 @@
                           "type": "string",
                           "example": "1990.01.01"
                         },
-                        "연락처": {
-                          "type": "string",
-                          "example": "010-1234-5678"
-                        },
                         "이메일": {
                           "type": "string",
                           "example": "example@email.com"
                         },
-                        "Github": {
+                        "연락처": {
+                          "type": "string",
+                          "example": "010-1234-5678"
+                        },
+                        "깃허브 주소": {
                           "type": "string",
                           "example": "https://github.com/username"
                         },
-                        "강점": {
-                          "type": "array",
-                          "example": [
-                            "문제해결능력",
-                            "협업과 소통"
-                          ],
-                          "items": {
-                            "type": "string"
-                          }
+                        "그 이외의 주소": {
+                          "type": "string",
+                          "example": "https://blog.example.com"
                         },
                         "기술스택": {
                           "type": "array",
@@ -170,6 +164,26 @@
                             "TypeScript",
                             "React",
                             "Node.js"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "프로젝트": {
+                          "type": "array",
+                          "example": [
+                            "프로젝트 1",
+                            "프로젝트 2"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "강점": {
+                          "type": "array",
+                          "example": [
+                            "문제해결능력",
+                            "협업과 소통"
                           ],
                           "items": {
                             "type": "string"
@@ -184,7 +198,7 @@
                     "questionListJson": {
                       "type": "object",
                       "properties": {
-                        "질문": {
+                        "기술 질문": {
                           "type": "array",
                           "example": [
                             "JavaScript의 클로저에 대해 설명해주세요.",
@@ -274,7 +288,7 @@
                   },
                   "question_list": {
                     "type": "string",
-                    "example": "{\"질문\":[\"JavaScript의 클로저에 대해 설명해주세요.\",\"React Hooks에 대해 설명해주세요.\"]}"
+                    "example": "{\"질문\":[{\"질문\":\"JavaScript의 클로저에 대해 설명해주세요.\",\"분류\":\"JavaScript\"}]}"
                   },
                   "created_at": {
                     "type": "string",
