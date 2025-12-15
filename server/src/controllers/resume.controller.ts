@@ -233,6 +233,54 @@ export const getAllResumes = async (
   }
 };
 
+export const getResume = async (
+  req: Request,
+  res: Response<Resume | ServerError>
+) => {
+  /*
+    #swagger.tags = ['Resume']
+    #swagger.summary = '이력서 조회'
+    #swagger.description = '이력서를 조회합니다.'
+    #swagger.parameters['resumeId'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: '조회할 이력서 ID'
+    }
+    #swagger.responses[200] = {
+      description: '조회 성공',
+      schema: {
+        resume_id: 1,
+        applicant_id: 1,
+        file_path: 'uploads/1234567890.pdf',
+        analyze_result: '{"이름":"홍길동","생년월일":"1990.01.01","연락처":"010-1234-5678","이메일":"example@email.com","Github":"https://github.com/username","강점":["문제해결능력"],"기술스택":["JavaScript","React"],"총점":85}',
+        question_list: '{"질문":[{"질문":"JavaScript의 클로저에 대해 설명해주세요.","분류":"JavaScript"}]}'
+      }
+    }
+    #swagger.responses[404] = {
+      description: '이력서를 찾을 수 없음',
+      schema: { error: 'Resume not found' }
+    }
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      schema: { error: '에러 메시지' }
+    }
+  */
+  const resumeId = req.params.resumeId;
+
+  try {
+    const resume = await resumeRepository.findResumeById(resumeId);
+
+    if (!resume) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
+
+    res.status(200).json(resume);
+  } catch (error: unknown) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};  
+
 export const removeResume = async (
   req: Request,
   res: Response<SuccessResponse | ServerError>
