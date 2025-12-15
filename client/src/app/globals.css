@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  /* colors */
+  --bg: #f7f8fa;          
+  --bg-2: #f2f6fb;        
+  --surface: #fffffd;     
+  --surface-2: #fdfdfd;  
+
+  --text: #2a2a2a;        
+  --text-muted: #707070;  
+  --text-subtle: #bcbcbc;
+
+  --border: #e6e6e6;      
+
+  --brand-soft: #dbeafe;  
+  --brand: #186ad8;       
+  --brand-2: #aaceff;   
+
+  --danger: #dc2626;    
+  --danger-bg: #ffeeef;  
+  --danger-border: #fed3d3; 
+
+  /* layout sizes */
+  --container-max: 980px; 
+  --content-max: 940px;   
+}
+
+@theme inline {
+  /* colors */
+  --color-canvas: var(--bg);
+  --color-canvas-2: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+
+  --color-ink: var(--text);
+  --color-ink-muted: var(--text-muted);
+  --color-ink-subtle: var(--text-subtle);
+
+  --color-border: var(--border);
+  --color-disabled: var(--border);
+
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-2: var(--brand-2);
+
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-border: var(--danger-border);
+
+  /* font */
+  --font-sans: var(--font-pretendard);
+
+  /* layout sizes */
+  --max-width-container: var(--container-max);
+  --max-width-content: var(--content-max);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
