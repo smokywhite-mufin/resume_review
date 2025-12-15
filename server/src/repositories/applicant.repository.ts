@@ -15,3 +15,9 @@ export const createApplicant = async (
 export const removeApplicant = async (applicantId:number): Promise<void> => {
   await dbRun(`DELETE FROM applicants WHERE applicant_id = ?`, [applicantId]);
 }
+
+export const removeAllApplicants = async (): Promise<void> => {
+  await dbRun(`DELETE FROM applicants`);
+  await dbRun(`Update sqlite_sequence SET seq = 0 WHERE name = 'applicants'`);
+}
+

@@ -271,11 +271,41 @@ export const removeResume = async (
       return res.status(404).json({ error: "Resume not found" });
     }
 
-    await resumeRepository.removeResume(resumeId);
     deleteFile(resume.file_path);
+    await resumeRepository.removeResume(resumeId);
     await applicantRepository.removeApplicant(resume.applicant_id);
 
     res.status(200).json({ message: "Resume deleted successfully" });
+  } catch (error: unknown) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const removeAllResumes = async (
+  req: Request,
+  res: Response<SuccessResponse | ServerError>
+) => {
+  /*
+    #swagger.tags = ['Resume']
+    #swagger.summary = '이력서 전체 삭제'
+    #swagger.description = '이력서를 전체 삭제합니다.'
+    #swagger.responses[200] = {
+      description: '삭제 성공',
+      schema: {
+        message: 'All resumes deleted successfully'
+      }
+    }
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      schema: { error: '에러 메시지' }
+    }
+  */
+  try {
+    const resumes = await resumeRepository.findAllResumes();
+    resumes.map((resume) => deleteFile(resume.file_path));
+    await resumeRepository.removeAllResumes();
+    await applicantRepository.removeAllApplicants();
+    res.status(200).json({ message: "All resumes deleted successfully" });
   } catch (error: unknown) {
     res.status(500).json({ error: (error as Error).message });
   }

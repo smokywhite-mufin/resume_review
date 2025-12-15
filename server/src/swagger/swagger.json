@@ -321,6 +321,45 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Resume"
+        ],
+        "summary": "이력서 전체 삭제",
+        "description": "이력서를 전체 삭제합니다.",
+        "responses": {
+          "200": {
+            "description": "삭제 성공",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "All resumes deleted successfully"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "서버 에러",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "에러 메시지"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       }
     },
     "/resumes/{resumeId}": {

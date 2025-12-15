@@ -41,3 +41,8 @@ export const updateResumeAnalysis = async (
 export const removeResume = async (resumeId: string): Promise<void> => {
   await dbRun(`DELETE FROM resumes WHERE resume_id = ?`, [resumeId]);
 };
+
+export const removeAllResumes = async (): Promise<void> => {
+  await dbRun(`DELETE FROM resumes`);
+  await dbRun(`Update sqlite_sequence SET seq = 0 WHERE name = 'resumes'`)
+};

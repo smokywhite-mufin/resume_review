@@ -13,5 +13,6 @@ router.post("/resumes/:resumeId/analyze", resumeController.analyzeResume);
 router.get("/resumes", resumeController.getAllResumes);
 
 router.delete("/resumes/:resumeId", resumeController.removeResume);
+router.delete("/resumes", resumeController.removeAllResumes);
 
 export default router;
