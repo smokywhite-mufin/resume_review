@@ -261,42 +261,76 @@
           "Resume"
         ],
         "summary": "모든 이력서 조회",
-        "description": "저장된 모든 이력서 목록을 조회합니다. analyze_result와 question_list는 JSON 문자열 형태입니다.",
+        "description": "저장된 모든 이력서 목록을 복합 커서 기반 페이지네이션으로 조회합니다.",
+        "parameters": [
+          {
+            "name": "updatedAt",
+            "in": "query",
+            "description": "다음 페이지 조회를 위한 커서 - 마지막 아이템의 updated_at",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "resumeId",
+            "in": "query",
+            "description": "다음 페이지 조회를 위한 커서 - 마지막 아이템의 resume_id",
+            "type": "integer",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "조회 성공",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "resume_id": {
-                    "type": "number",
-                    "example": 1
-                  },
-                  "applicant_id": {
-                    "type": "number",
-                    "example": 1
-                  },
-                  "file_path": {
-                    "type": "string",
-                    "example": "uploads/1234567890.pdf"
-                  },
-                  "analyze_result": {
-                    "type": "string",
-                    "example": "{\"이름\":\"홍길동\",\"생년월일\":\"1990.01.01\",\"연락처\":\"010-1234-5678\",\"이메일\":\"example@email.com\",\"Github\":\"https://github.com/username\",\"강점\":[\"문제해결능력\"],\"기술스택\":[\"JavaScript\",\"React\"],\"총점\":85}"
-                  },
-                  "question_list": {
-                    "type": "string",
-                    "example": "{\"질문\":[{\"질문\":\"JavaScript의 클로저에 대해 설명해주세요.\",\"분류\":\"JavaScript\"}]}"
-                  },
-                  "created_at": {
-                    "type": "string",
-                    "example": "2024-01-01T00:00:00.000Z"
-                  },
-                  "updated_at": {
-                    "type": "string",
-                    "example": "2024-01-01T00:00:00.000Z"
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "resume_id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "applicant_id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "file_path": {
+                        "type": "string",
+                        "example": "uploads/1234567890.pdf"
+                      },
+                      "analyze_result": {
+                        "type": "string",
+                        "example": "{\"이름\":\"홍길동\",\"생년월일\":\"1990.01.01\",\"연락처\":\"010-1234-5678\",\"이메일\":\"example@email.com\",\"Github\":\"https://github.com/username\",\"강점\":[\"문제해결능력\"],\"기술스택\":[\"JavaScript\",\"React\"],\"총점\":85}"
+                      },
+                      "question_list": {
+                        "type": "string",
+                        "example": "{\"질문\":[{\"질문\":\"JavaScript의 클로저에 대해 설명해주세요.\",\"분류\":\"JavaScript\"}]}"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-01-01T00:00:00.000Z"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "example": "2024-01-01T00:00:00.000Z"
+                      }
+                    }
+                  }
+                },
+                "nextCursor": {
+                  "type": "object",
+                  "properties": {
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-01-01T00:00:00.000Z"
+                    },
+                    "resumeId": {
+                      "type": "number",
+                      "example": 5
+                    }
                   }
                 }
               },
@@ -362,7 +396,7 @@
         }
       }
     },
-    "/resumes/": {
+    "/resumes/{resumeId}": {
       "get": {
         "tags": [
           "Resume"
@@ -373,8 +407,8 @@
           {
             "name": "resumeId",
             "in": "path",
-            "type": "string",
             "required": true,
+            "type": "string",
             "description": "조회할 이력서 ID"
           }
         ],
@@ -441,9 +475,7 @@
             }
           }
         }
-      }
-    },
-    "/resumes/{resumeId}": {
+      },
       "delete": {
         "tags": [
           "Resume"

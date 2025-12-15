@@ -10,6 +10,8 @@ import {
 } from "../constants/prompts";
 import {
   AnalyzeResponse,
+  GetAllResumesResponse,
+  NextCursor,
   ServerError,
   SuccessResponse,
   UploadResponse,
@@ -202,32 +204,70 @@ export const analyzeResume = async (
 
 export const getAllResumes = async (
   req: Request,
-  res: Response<Resume[] | ServerError>
+  res: Response<GetAllResumesResponse | ServerError>
 ) => {
   /*
+    #swagger.auto = false
     #swagger.tags = ['Resume']
     #swagger.summary = '모든 이력서 조회'
-    #swagger.description = '저장된 모든 이력서 목록을 조회합니다. analyze_result와 question_list는 JSON 문자열 형태입니다.'
+    #swagger.description = '저장된 모든 이력서 목록을 복합 커서 기반 페이지네이션으로 조회합니다.'
+    #swagger.parameters['updatedAt'] = {
+      in: 'query',
+      description: '다음 페이지 조회를 위한 커서 - 마지막 아이템의 updated_at',
+      type: 'string',
+      required: false
+    }
+    #swagger.parameters['resumeId'] = {
+      in: 'query',
+      description: '다음 페이지 조회를 위한 커서 - 마지막 아이템의 resume_id',
+      type: 'integer',
+      required: false
+    }
     #swagger.responses[200] = {
       description: '조회 성공',
-      schema: [{
-        resume_id: 1,
-        applicant_id: 1,
-        file_path: 'uploads/1234567890.pdf',
-        analyze_result: '{"이름":"홍길동","생년월일":"1990.01.01","연락처":"010-1234-5678","이메일":"example@email.com","Github":"https://github.com/username","강점":["문제해결능력"],"기술스택":["JavaScript","React"],"총점":85}',
-        question_list: '{"질문":[{"질문":"JavaScript의 클로저에 대해 설명해주세요.","분류":"JavaScript"}]}',
-        created_at: '2024-01-01T00:00:00.000Z',
-        updated_at: '2024-01-01T00:00:00.000Z'
-      }]
+      schema: {
+        data: [{
+          resume_id: 1,
+          applicant_id: 1,
+          file_path: 'uploads/1234567890.pdf',
+          analyze_result: '{"이름":"홍길동","생년월일":"1990.01.01","연락처":"010-1234-5678","이메일":"example@email.com","Github":"https://github.com/username","강점":["문제해결능력"],"기술스택":["JavaScript","React"],"총점":85}',
+          question_list: '{"질문":[{"질문":"JavaScript의 클로저에 대해 설명해주세요.","분류":"JavaScript"}]}',
+          created_at: '2024-01-01T00:00:00.000Z',
+          updated_at: '2024-01-01T00:00:00.000Z'
+        }],
+        nextCursor: {
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          resumeId: 5
+        }
+      }
     }
     #swagger.responses[500] = {
       description: '서버 에러',
       schema: { error: '에러 메시지' }
     }
   */
+  const { updatedAt, resumeId } = req.query;
+
+  const limitNumber = 10;
+  const cursor =
+    updatedAt && resumeId
+      ? { updatedAt: String(updatedAt), resumeId: Number(resumeId) }
+      : undefined;
+
   try {
-    const resumes = await resumeRepository.findAllResumes();
-    res.status(200).json(resumes);
+    const resumes = await resumeRepository.findResumes(limitNumber, cursor);
+
+    let newNextCursor: NextCursor | null = null;
+
+    if (resumes.length === limitNumber) {
+      const lastResume = resumes[resumes.length - 1];
+      newNextCursor = {
+        updatedAt: lastResume.updated_at,
+        resumeId: lastResume.resume_id,
+      };
+    }
+
+    res.status(200).json({ data: resumes, nextCursor: newNextCursor });
   } catch (error: unknown) {
     res.status(500).json({ error: (error as Error).message });
   }
@@ -276,10 +316,10 @@ export const getResume = async (
     }
 
     res.status(200).json(resume);
-  } catch (error: unknown) {
+  } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
-};  
+};
 
 export const removeResume = async (
   req: Request,

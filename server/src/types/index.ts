@@ -1,4 +1,5 @@
 import { RunResult } from "sqlite3";
+import { Resume } from "../models/Resume";
 
 export interface Messages {
   role: "system" | "user";
@@ -26,6 +27,21 @@ export interface AnalyzeResponse {
   };
 }
 
+export interface CursorParams {
+  updatedAt: string;
+  resumeId: number;
+}
+
+export interface NextCursor {
+  updatedAt: string;
+  resumeId: number;
+}
+
+export interface GetAllResumesResponse {
+  data: Resume[];
+  nextCursor: NextCursor | null;
+}
+
 export interface ServerError {
   error: string;
 }
@@ -34,4 +50,3 @@ export interface SuccessResponse {
   message: string;
 }
 export { RunResult };
-

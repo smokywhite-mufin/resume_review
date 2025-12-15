@@ -1,5 +1,6 @@
 import { dbRun, dbGet, dbGetAll } from "../config/database";
 import { Resume } from "../models/Resume";
+import { CursorParams } from "../types";
 
 export const createResume = async (
   applicantId: number,
@@ -15,6 +16,26 @@ export const createResume = async (
 
 export const findResumeById = async (resumeId: string): Promise<Resume> => {
   return dbGet<Resume>(`SELECT * FROM resumes WHERE resume_id = ?`, [resumeId]);
+};
+
+export const findResumes = async (
+  limit: number,
+  cursor?: CursorParams
+): Promise<Resume[]> => {
+  if (cursor) {
+    return dbGetAll<Resume>(
+      `SELECT * FROM resumes 
+       WHERE updated_at < ? OR (updated_at = ? AND resume_id < ?)
+       ORDER BY updated_at DESC, resume_id DESC 
+       LIMIT ?`,
+      [cursor.updatedAt, cursor.updatedAt, cursor.resumeId, limit]
+    );
+  }
+
+  return dbGetAll<Resume>(
+    `SELECT * FROM resumes ORDER BY updated_at DESC, resume_id DESC LIMIT ?`,
+    [limit]
+  );
 };
 
 export const findAllResumes = async (): Promise<Resume[]> => {
@@ -44,5 +65,5 @@ export const removeResume = async (resumeId: string): Promise<void> => {
 
 export const removeAllResumes = async (): Promise<void> => {
   await dbRun(`DELETE FROM resumes`);
-  await dbRun(`Update sqlite_sequence SET seq = 0 WHERE name = 'resumes'`)
+  await dbRun(`Update sqlite_sequence SET seq = 0 WHERE name = 'resumes'`);
 };
