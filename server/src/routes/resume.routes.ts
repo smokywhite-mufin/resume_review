@@ -10,8 +10,10 @@ router.post(
   resumeController.uploadResume
 );
 router.post("/resumes/:resumeId/analyze", resumeController.analyzeResume);
+
 router.get("/resumes", resumeController.getAllResumes);
 router.get("/resumes/:resumeId", resumeController.getResume);
+router.get("/resumes/:resumeId/download", resumeController.downloadResume);
 
 router.delete("/resumes/:resumeId", resumeController.removeResume);
 router.delete("/resumes", resumeController.removeAllResumes);

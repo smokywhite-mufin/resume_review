@@ -405,3 +405,27 @@ export const removeAllResumes = async (
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
+export const downloadResume = async (
+  req: Request,
+  res: Response<void | ServerError>
+) => {
+  /*
+    #swagger.tags = ['Resume']
+    #swagger.summary = '이력서 다운로드'
+    #swagger.description = '이력서를 다운로드합니다.'
+  */
+  const resumeId = req.params.resumeId;
+
+  try {
+    const resume = await resumeRepository.findResumeById(resumeId);
+
+    if (!resume) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
+
+    res.download(resume.file_path, resume.original_filename);
+  } catch (error: unknown) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};

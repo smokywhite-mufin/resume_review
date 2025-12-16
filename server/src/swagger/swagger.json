@@ -547,6 +547,31 @@
           }
         }
       }
+    },
+    "/resumes/{resumeId}/download": {
+      "get": {
+        "tags": [
+          "Resume"
+        ],
+        "summary": "이력서 다운로드",
+        "description": "이력서를 다운로드합니다.",
+        "parameters": [
+          {
+            "name": "resumeId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   }
 }
