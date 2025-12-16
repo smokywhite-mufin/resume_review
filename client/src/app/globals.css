@@ -54,6 +54,15 @@
   /* layout sizes */
   --max-width-container: var(--container-max);
   --max-width-content: var(--content-max);
+
+    /* custom font sizes */
+  --font-size-7: 28px;
+
+  /* custom spacing */
+  --spacing-4\.5: 18px;
+
+  /* drop shadows */
+  --shadow-drop: 0px 0px 8px 0px rgba(0, 0, 0, 0.12);
 }
 
 body {
