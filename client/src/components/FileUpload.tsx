@@ -74,7 +74,7 @@ export default function FileUpload() {
           <button
             type="submit"
             disabled={!file || isPending}
-            className="py-2.5 px-16 rounded-lg bg-brand text-surface text-xl font-bold cursor-pointer hover:opacity-95 transition-opacity disabled:bg-border disabled:text-ink-subtle disabled:cursor-not-allowed"
+            className="py-2.5 px-16 rounded-lg bg-brand text-surface text-xl font-bold cursor-pointer hover:bg-brand/90 transition-colors disabled:bg-border disabled:text-ink-subtle disabled:cursor-not-allowed"
           >
             분석 시작
           </button>
