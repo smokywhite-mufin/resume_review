@@ -1,11 +1,14 @@
 "use client";
 
+import usePostFile from "@/hooks/usePostFile";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { LuFileUp } from "react-icons/lu";
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
+
+  const { mutate, isPending } = usePostFile();
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -19,6 +22,8 @@ export default function FileUpload() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return;
+
+    mutate(file);
   };
 
   return (
@@ -62,7 +67,7 @@ export default function FileUpload() {
         <div className="flex justify-center items-center mt-4.5">
           <button
             type="submit"
-            disabled={!file}
+            disabled={!file || isPending}
             className="py-2.5 px-16 rounded-lg bg-brand text-surface text-xl font-bold cursor-pointer hover:opacity-95 transition-opacity disabled:bg-border disabled:text-ink-subtle disabled:cursor-not-allowed"
           >
             분석 시작
