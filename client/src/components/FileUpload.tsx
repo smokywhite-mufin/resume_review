@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { LuFileUp } from 'react-icons/lu';
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { LuFileUp } from "react-icons/lu";
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -12,7 +12,7 @@ export default function FileUpload() {
       setFile(acceptedFiles[0]);
     },
     accept: {
-      'application/pdf': ['.pdf'],
+      "application/pdf": [".pdf"],
     },
   });
 
@@ -22,55 +22,53 @@ export default function FileUpload() {
   };
 
   return (
-    <main className="max-w-container px-5 pt-12 pb-8 mx-auto">
-      <div className="max-w-content mx-auto bg-surface rounded-2xl p-7 shadow-drop">
-        <h1 className="text-2xl font-bold mb-4.5">Resume Review</h1>
-        <form onSubmit={handleSubmit}>
-          <div
-            {...getRootProps()}
-            className="py-10 bg-surface-2 border border-border border-dashed rounded-2xl"
+    <div className="max-w-content mx-auto bg-surface rounded-2xl p-7 shadow-drop">
+      <h1 className="text-2xl font-bold mb-4.5">Resume Review</h1>
+      <form onSubmit={handleSubmit}>
+        <div
+          {...getRootProps()}
+          className="py-10 bg-surface-2 border border-border border-dashed rounded-2xl"
+        >
+          <input {...getInputProps()} />
+          {file ? (
+            <div className="flex flex-col justify-center items-center">
+              <p className="text-xl font-bold mb-1">{file.name}</p>
+              <p className="text-xs text-ink-subtle mb-2">업로드 완료</p>
+              <p className="text-base font-medium text-ink-muted mb-4">
+                다른 파일로 바꾸려면, 파일을 변경하거나 드롭하세요.
+              </p>
+              <button
+                type="button"
+                className="py-2 px-2.5 border border-border rounded-lg text-sm font-semibold bg-surface cursor-pointer hover:bg-surface-2 hover:border-ink-subtle transition-colors"
+              >
+                파일 변경
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col justify-center items-center">
+              <LuFileUp className="size-11 stroke-1 text-ink-subtle mb-2" />
+              <p className="text-base font-medium text-ink-muted mb-4">
+                PDF 파일을 이곳에 끌어다 놓거나, 파일을 업로하세요.
+              </p>
+              <button
+                type="button"
+                className="py-2 px-2.5 border border-border rounded-lg text-sm font-semibold bg-surface cursor-pointer hover:bg-surface-2 hover:border-ink-subtle transition-colors"
+              >
+                파일 업로드
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="flex justify-center items-center mt-4.5">
+          <button
+            type="submit"
+            disabled={!file}
+            className="py-2.5 px-16 rounded-lg bg-brand text-surface text-xl font-bold cursor-pointer hover:opacity-95 transition-opacity disabled:bg-border disabled:text-ink-subtle disabled:cursor-not-allowed"
           >
-            <input {...getInputProps()} />
-            {file ? (
-              <div className="flex flex-col justify-center items-center">
-                <p className="text-xl font-bold mb-1">{file.name}</p>
-                <p className="text-xs text-ink-subtle mb-2">업로드 완료</p>
-                <p className="text-base font-medium text-ink-muted mb-4">
-                  다른 파일로 바꾸려면, 파일을 변경하거나 드롭하세요.
-                </p>
-                <button
-                  type="button"
-                  className="py-2 px-2.5 border border-border rounded-lg text-sm font-semibold bg-surface cursor-pointer hover:bg-surface-2 hover:border-ink-subtle transition-colors"
-                >
-                  파일 변경
-                </button>
-              </div>
-            ) : (
-              <div className="flex flex-col justify-center items-center">
-                <LuFileUp className="size-11 stroke-1 text-ink-subtle mb-2" />
-                <p className="text-base font-medium text-ink-muted mb-4">
-                  PDF 파일을 이곳에 끌어다 놓거나, 파일을 업로하세요.
-                </p>
-                <button
-                  type="button"
-                  className="py-2 px-2.5 border border-border rounded-lg text-sm font-semibold bg-surface cursor-pointer hover:bg-surface-2 hover:border-ink-subtle transition-colors"
-                >
-                  파일 업로드
-                </button>
-              </div>
-            )}
-          </div>
-          <div className="flex justify-center items-center mt-4.5">
-            <button
-              type="submit"
-              disabled={!file}
-              className="py-2.5 px-16 rounded-lg bg-brand text-surface text-xl font-bold cursor-pointer hover:opacity-95 transition-opacity disabled:bg-border disabled:text-ink-subtle disabled:cursor-not-allowed"
-            >
-              분석 시작
-            </button>
-          </div>
-        </form>
-      </div>
-    </main>
+            분석 시작
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
