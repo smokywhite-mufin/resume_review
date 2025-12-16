@@ -55,6 +55,7 @@ export const initializeDatabase = async (): Promise<void> => {
             resume_id INTEGER PRIMARY KEY AUTOINCREMENT,
             applicant_id INTEGER NOT NULL,
             file_path TEXT NOT NULL,
+            original_filename TEXT NOT NULL,
             analyze_result TEXT,
             question_list TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

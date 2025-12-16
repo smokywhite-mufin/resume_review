@@ -5,11 +5,12 @@ import { CursorParams } from "../types";
 export const createResume = async (
   applicantId: number,
   filePath: string,
+  originalFilename: string,
   now: string
 ): Promise<number> => {
   const result = await dbRun(
-    `INSERT INTO resumes (applicant_id, file_path, created_at, updated_at) VALUES (?, ?, ?, ?)`,
-    [applicantId, filePath, now, now]
+    `INSERT INTO resumes (applicant_id, file_path, original_filename, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`,
+    [applicantId, filePath, originalFilename, now, now]
   );
   return result.lastID;
 };

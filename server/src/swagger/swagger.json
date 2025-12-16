@@ -301,6 +301,10 @@
                         "type": "string",
                         "example": "uploads/1234567890.pdf"
                       },
+                      "original_filename": {
+                        "type": "string",
+                        "example": "홍길동_이력서.pdf"
+                      },
                       "analyze_result": {
                         "type": "string",
                         "example": "{\"이름\":\"홍길동\",\"생년월일\":\"1990.01.01\",\"연락처\":\"010-1234-5678\",\"이메일\":\"example@email.com\",\"Github\":\"https://github.com/username\",\"강점\":[\"문제해결능력\"],\"기술스택\":[\"JavaScript\",\"React\"],\"총점\":85}"
@@ -429,6 +433,10 @@
                 "file_path": {
                   "type": "string",
                   "example": "uploads/1234567890.pdf"
+                },
+                "original_filename": {
+                  "type": "string",
+                  "example": "홍길동_이력서.pdf"
                 },
                 "analyze_result": {
                   "type": "string",

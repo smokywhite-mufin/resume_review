@@ -58,6 +58,10 @@ export const uploadResume = async (
   }
 
   const pdfPath = req.file.path;
+  const originalFilename = Buffer.from(
+    req.file.originalname,
+    "latin1"
+  ).toString("utf8");
 
   try {
     const fullText = await pdfService.extractTextFromPdf(pdfPath);
@@ -74,6 +78,7 @@ export const uploadResume = async (
     const resumeId = await resumeRepository.createResume(
       applicantId,
       pdfPath,
+      originalFilename,
       now
     );
 
@@ -230,6 +235,7 @@ export const getAllResumes = async (
           resume_id: 1,
           applicant_id: 1,
           file_path: 'uploads/1234567890.pdf',
+          original_filename: '홍길동_이력서.pdf',
           analyze_result: '{"이름":"홍길동","생년월일":"1990.01.01","연락처":"010-1234-5678","이메일":"example@email.com","Github":"https://github.com/username","강점":["문제해결능력"],"기술스택":["JavaScript","React"],"총점":85}',
           question_list: '{"질문":[{"질문":"JavaScript의 클로저에 대해 설명해주세요.","분류":"JavaScript"}]}',
           created_at: '2024-01-01T00:00:00.000Z',
@@ -293,6 +299,7 @@ export const getResume = async (
         resume_id: 1,
         applicant_id: 1,
         file_path: 'uploads/1234567890.pdf',
+        original_filename: '홍길동_이력서.pdf',
         analyze_result: '{"이름":"홍길동","생년월일":"1990.01.01","연락처":"010-1234-5678","이메일":"example@email.com","Github":"https://github.com/username","강점":["문제해결능력"],"기술스택":["JavaScript","React"],"총점":85}',
         question_list: '{"질문":[{"질문":"JavaScript의 클로저에 대해 설명해주세요.","분류":"JavaScript"}]}'
       }
