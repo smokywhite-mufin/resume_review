@@ -1,6 +1,9 @@
 import { Messages } from "../types";
 
-export const callGroq = async (messages: Messages[]) => {
+export const callGroq = async (
+  messages: Messages[],
+  temperature: number = 0
+) => {
   const response = await fetch(
     "https://api.groq.com/openai/v1/chat/completions",
     {
@@ -12,7 +15,7 @@ export const callGroq = async (messages: Messages[]) => {
       body: JSON.stringify({
         model: "llama-3.1-8b-instant",
         messages: messages,
-        temperature: 0,
+        temperature: temperature,
         response_format: { type: "json_object" },
       }),
     }
@@ -21,4 +24,3 @@ export const callGroq = async (messages: Messages[]) => {
   const result = await response.json();
   return result.choices[0].message.content;
 };
-

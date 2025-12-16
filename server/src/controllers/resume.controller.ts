@@ -166,23 +166,26 @@ export const analyzeResume = async (
     ]);
     const analyzeResultJson = JSON.parse(analyzeResult);
 
-    const questionList = await aiService.callGroq([
-      {
-        role: "system",
-        content: INTERVIEW_QUESTION_SYSTEM_PROMPT,
-      },
-      {
-        role: "user",
-        content: `지원자 이력서 분석 내용: ${JSON.stringify(
-          analyzeResultJson,
-          null,
-          2
-        )}
+    const questionList = await aiService.callGroq(
+      [
+        {
+          role: "system",
+          content: INTERVIEW_QUESTION_SYSTEM_PROMPT,
+        },
+        {
+          role: "user",
+          content: `지원자 이력서 분석 내용: ${JSON.stringify(
+            analyzeResultJson,
+            null,
+            2
+          )}
             
             회사 요구사항: ${JOB_REQUIREMENTS}
             `,
-      },
-    ]);
+        },
+      ],
+      0.8
+    );
     const questionListJson = JSON.parse(questionList);
 
     const now = new Date().toISOString();
