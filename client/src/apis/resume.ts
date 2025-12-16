@@ -1,5 +1,9 @@
 import defaultInstance from "@/libs/axios";
-import { GetAllResumesResponse, UploadResponse } from "@/types";
+import {
+  AnalyzeResponse,
+  GetAllResumesResponse,
+  UploadResponse,
+} from "@/types";
 
 // 파일 업로드 api
 export const uploadResume = async (file: File): Promise<UploadResponse> => {
@@ -16,6 +20,16 @@ export const uploadResume = async (file: File): Promise<UploadResponse> => {
     }
   );
 
+  return response.data;
+};
+
+// 이력서 분석 api
+export const analyzeResume = async (
+  resumeId: number
+): Promise<AnalyzeResponse> => {
+  const response = await defaultInstance.post<AnalyzeResponse>(
+    `/resumes/${resumeId}/analyze`
+  );
   return response.data;
 };
 

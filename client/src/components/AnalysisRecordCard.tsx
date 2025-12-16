@@ -16,7 +16,7 @@ export default function AnalysisRecordCard({
             <AiOutlineFile className="size-4 stroke-1" />
           </div>
           <div className="flex flex-col">
-            <p className="text-base font-bold">{resume.file_path}</p>
+            <p className="text-base font-bold">{resume.original_filename}</p>
             <div className="flex items-center">
               <p className="text-ink-subtle text-sm font-bold mr-2">
                 {resume.analyze_result?.이름} | {resume.updated_at}

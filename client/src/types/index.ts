@@ -27,11 +27,21 @@ export type QuestionList = {
   "기술 질문": string[];
 };
 
+export type AnalyzeResponse = {
+  message: string;
+  data: {
+    analyzeResultJson: AnalyzeResult;
+    questionListJson: QuestionList;
+    updated_at: string;
+  };
+};
+
 // 서버에서 오는 원본 Resume 타입 (string으로 저장)
 export type ResumeRaw = {
   resume_id: number;
   applicant_id: number;
   file_path: string;
+  original_filename: string;
   analyze_result: string;
   question_list: string;
   created_at: string;
@@ -42,6 +52,7 @@ export type Resume = {
   resume_id: number;
   applicant_id: number;
   file_path: string;
+  original_filename: string;
   analyze_result: AnalyzeResult | null;
   question_list: QuestionList | null;
   created_at: string;

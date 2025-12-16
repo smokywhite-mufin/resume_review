@@ -1,5 +1,6 @@
 "use client";
 
+import usePostAnalysis from "@/hooks/usePostAnalysis";
 import usePostFile from "@/hooks/usePostFile";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -8,7 +9,11 @@ import { LuFileUp } from "react-icons/lu";
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
 
-  const { mutate, isPending } = usePostFile();
+  const { mutateAsync: uploadFile, isPending: isUploading } = usePostFile();
+  const { mutateAsync: analyzeResume, isPending: isAnalyzing } =
+    usePostAnalysis();
+
+  const isPending = isUploading || isAnalyzing;
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -19,11 +24,12 @@ export default function FileUpload() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return;
 
-    mutate(file);
+    const uploadResponse = await uploadFile(file);
+    await analyzeResume(uploadResponse.resume_id);
   };
 
   return (
