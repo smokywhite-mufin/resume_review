@@ -25,16 +25,16 @@ export const findResumes = async (
 ): Promise<Resume[]> => {
   if (cursor) {
     return dbGetAll<Resume>(
-      `SELECT * FROM resumes 
-       WHERE updated_at < ? OR (updated_at = ? AND resume_id < ?)
-       ORDER BY updated_at DESC, resume_id DESC 
-       LIMIT ?`,
+      `SELECT * FROM resumes WHERE analyze_result IS NOT NULL 
+      AND (updated_at < ? OR (updated_at = ? AND resume_id < ?))
+      ORDER BY updated_at DESC, resume_id DESC 
+      LIMIT ?`,
       [cursor.updatedAt, cursor.updatedAt, cursor.resumeId, limit]
     );
   }
 
   return dbGetAll<Resume>(
-    `SELECT * FROM resumes ORDER BY updated_at DESC, resume_id DESC LIMIT ?`,
+    `SELECT * FROM resumes WHERE analyze_result IS NOT NULL ORDER BY updated_at DESC, resume_id DESC LIMIT ?`,
     [limit]
   );
 };
