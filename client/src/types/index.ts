@@ -68,3 +68,7 @@ export type GetAllResumesResponse = {
   data: ResumeRaw[];
   nextCursor: NextCursor | null;
 };
+
+export type SuccessResponse = {
+  message: string;
+};
