@@ -1,6 +1,13 @@
+import { Resume } from "@/types";
 import { AiOutlineClose, AiOutlineFile } from "react-icons/ai";
 
-export default function AnalysisRecordCard() {
+interface AnalysisRecordCardProps {
+  resume: Resume;
+}
+
+export default function AnalysisRecordCard({
+  resume,
+}: AnalysisRecordCardProps) {
   return (
     <div className="flex justify-between p-4 bg-surface rounded-2xl shadow-drop">
       <section>
@@ -9,13 +16,13 @@ export default function AnalysisRecordCard() {
             <AiOutlineFile className="size-4 stroke-1" />
           </div>
           <div className="flex flex-col">
-            <p className="text-base font-bold">파일이름</p>
+            <p className="text-base font-bold">{resume.file_path}</p>
             <div className="flex items-center">
               <p className="text-ink-subtle text-sm font-bold mr-2">
-                이름 | 업데이트 날짜
+                {resume.analyze_result?.이름} | {resume.updated_at}
               </p>
               <div className="text-xs text-brand font-bold py-1 px-2 bg-brand-soft border border-brand-2 rounded-2xl">
-                총 90점
+                {resume.analyze_result?.점수}
               </div>
             </div>
           </div>
