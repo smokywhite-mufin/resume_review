@@ -2,11 +2,13 @@
 
 import usePostAnalysis from "@/hooks/usePostAnalysis";
 import usePostFile from "@/hooks/usePostFile";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { LuFileUp } from "react-icons/lu";
 
 export default function FileUpload() {
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
 
   const { mutateAsync: uploadFile, isPending: isUploading } = usePostFile();
@@ -30,6 +32,7 @@ export default function FileUpload() {
 
     const uploadResponse = await uploadFile(file);
     await analyzeResume(uploadResponse.resume_id);
+    router.push(`/resume/${uploadResponse.resume_id}`);
   };
 
   return (

@@ -8,6 +8,7 @@ const usePostAnalysis = () => {
     mutationFn: analyzeResume,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resumes"] });
+      queryClient.invalidateQueries({ queryKey: ["resume"] });
     },
     onError: (error) => {
       console.log(error);

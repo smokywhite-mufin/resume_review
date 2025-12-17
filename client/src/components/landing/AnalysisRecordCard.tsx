@@ -18,8 +18,10 @@ export default function AnalysisRecordCard({
   const { mutate: postAnalysis } = usePostAnalysis();
   const { mutate: deleteResume } = useDeleteResume();
 
-  const handleReanalyze = () => {
+  const handleReanalyze = (e: React.MouseEvent) => {
+    e.stopPropagation();
     postAnalysis(resume.resume_id);
+    router.push(`/resume/${resume.resume_id}`);
   };
 
   const handleDownload = (resumeId: number) => {
@@ -28,7 +30,8 @@ export default function AnalysisRecordCard({
 
   const [open, setOpen] = useState(false);
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setOpen(true);
   };
 
@@ -74,7 +77,10 @@ export default function AnalysisRecordCard({
             재분석
           </button>
           <button
-            onClick={() => handleDownload(resume.resume_id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDownload(resume.resume_id);
+            }}
             className="px-4 py-3 rounded-lg text-brand border border-brand-2 text-base font-bold hover:bg-canvas transition-colors cursor-pointer"
           >
             다운로드
