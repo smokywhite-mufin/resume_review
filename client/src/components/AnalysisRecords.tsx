@@ -7,6 +7,7 @@ import AnalysisRecordCard from "./AnalysisRecordCard";
 import { Resume } from "@/types";
 import DeletePopUp from "./DeletePopUp";
 import useDeleteAllResume from "@/hooks/useDeleteAllResume";
+import { parseResumeData } from "@/utils/resume";
 
 export default function AnalysisRecords() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
@@ -26,17 +27,8 @@ export default function AnalysisRecords() {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // string으로 오는 analyze_result와 question_list를 파싱
   const allResumes: Resume[] =
-    data?.pages.flatMap((page) =>
-      page.data.map((raw) => ({
-        ...raw,
-        analyze_result: raw.analyze_result
-          ? JSON.parse(raw.analyze_result)
-          : null,
-        question_list: raw.question_list ? JSON.parse(raw.question_list) : null,
-      }))
-    ) ?? [];
+    data?.pages.flatMap((page) => page.data.map(parseResumeData)) ?? [];
 
   if (isLoading || allResumes.length === 0) {
     return null;
@@ -58,7 +50,7 @@ export default function AnalysisRecords() {
         <button
           type="button"
           onClick={handleDelete}
-          className="text-sm font-bold text-ink-muted"
+          className="text-sm font-bold text-ink-muted cursor-pointer hover:text-ink-subtle"
         >
           전체 삭제
         </button>
