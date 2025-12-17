@@ -1,13 +1,24 @@
+"use client";
+
 import DetailContent from "@/components/detail/DetailContent";
+import { useRouter } from "next/navigation";
 import { BiArrowBack } from "react-icons/bi";
 
 export default function ResultPage() {
+  const router = useRouter();
+  const handleClickBack = () => {
+    router.back();
+  };
   return (
     <div className="max-w-container px-5 py-12 mx-auto">
       <header className="max-w-content flex justify-between px-0.5 py-1 mb-4">
         <div className="flex items-center">
-          <button type="button" className="mr-5 cursor-pointer">
-            <BiArrowBack className="size-6 text-ink-subtle" />
+          <button
+            onClick={handleClickBack}
+            type="button"
+            className="mr-5 cursor-pointer"
+          >
+            <BiArrowBack className="size-6 text-ink-subtle hover:text-ink-muted transition-colors" />
           </button>
           <h1 className="text-2xl font-bold">Resume Review</h1>
         </div>

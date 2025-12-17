@@ -50,7 +50,7 @@ export default function AnalysisRecords() {
         <button
           type="button"
           onClick={handleDelete}
-          className="text-sm font-bold text-ink-muted cursor-pointer hover:text-ink-subtle"
+          className="text-sm font-bold text-ink-subtle cursor-pointer hover:text-ink-muted transition-colors"
         >
           전체 삭제
         </button>
@@ -69,7 +69,7 @@ export default function AnalysisRecords() {
       </div>
       <div ref={ref} className="py-4 text-center">
         {isFetchingNextPage && (
-          <p className="text-ink-muted">더 불러오는 중...</p>
+          <p className="text-ink-subtle">더 불러오는 중...</p>
         )}
       </div>
     </div>

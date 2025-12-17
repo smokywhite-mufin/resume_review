@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AiOutlineClose, AiOutlineFile } from "react-icons/ai";
 import DeletePopUp from "../DeletePopUp";
 import useDeleteResume from "@/hooks/useDeleteResume";
+import { useRouter } from "next/navigation";
 
 interface AnalysisRecordCardProps {
   resume: Resume;
@@ -13,6 +14,7 @@ interface AnalysisRecordCardProps {
 export default function AnalysisRecordCard({
   resume,
 }: AnalysisRecordCardProps) {
+  const router = useRouter();
   const { mutate: postAnalysis } = usePostAnalysis();
   const { mutate: deleteResume } = useDeleteResume();
 
@@ -35,9 +37,16 @@ export default function AnalysisRecordCard({
     setOpen(false);
   };
 
+  const handleClickGotoDetail = () => {
+    router.push(`/resume/${resume.resume_id}`);
+  };
+
   return (
     <div className="relative">
-      <div className="flex justify-between p-4 bg-surface rounded-2xl shadow-drop hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer">
+      <div
+        onClick={handleClickGotoDetail}
+        className="flex justify-between p-4 bg-surface rounded-2xl shadow-drop hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
+      >
         <section>
           <div className="flex">
             <div className="flex items-center justify-center px-2 py-2.5 border border-border rounded-lg mr-4 my-2">
