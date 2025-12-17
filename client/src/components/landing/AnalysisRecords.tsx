@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import useGetAllResumes from "@/hooks/useGetAllResumes";
 import AnalysisRecordCard from "./AnalysisRecordCard";
 import { Resume } from "@/types";
-import DeletePopUp from "../DeletePopUp";
+import DeletePopUp from "../common/DeletePopUp";
 import useDeleteAllResume from "@/hooks/useDeleteAllResume";
 import { parseResumeData } from "@/utils/resume";
 

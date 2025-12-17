@@ -1,6 +1,6 @@
 "use client";
 
-import DeletePopUp from "@/components/DeletePopUp";
+import DeletePopUp from "@/components/common/DeletePopUp";
 import ProjectComponent from "@/components/detail/ProjectComponent";
 import SkillComponent from "@/components/detail/SkillComponent";
 import { BASE_URL } from "@/constants/env";

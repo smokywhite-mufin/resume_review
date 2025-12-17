@@ -1,5 +1,6 @@
 import AnalysisRecords from "@/components/landing/AnalysisRecords";
 import FileUpload from "@/components/landing/FileUpload";
+import ScrollToTopButton from "@/components/common/ScrollToTopButton";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
         <FileUpload />
       </div>
       <AnalysisRecords />
+      <ScrollToTopButton />
     </div>
   );
 }
