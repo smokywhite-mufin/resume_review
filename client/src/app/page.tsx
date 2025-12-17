@@ -1,4 +1,4 @@
-import AnalysisRecords from "@/components/AnalysisRecords";
+import AnalysisRecords from "@/components/home/AnalysisRecords";
 import FileUpload from "@/components/FileUpload";
 
 export default function Home() {

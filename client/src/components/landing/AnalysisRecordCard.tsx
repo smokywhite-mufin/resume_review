@@ -3,7 +3,7 @@ import usePostAnalysis from "@/hooks/usePostAnalysis";
 import { Resume } from "@/types";
 import { useState } from "react";
 import { AiOutlineClose, AiOutlineFile } from "react-icons/ai";
-import DeletePopUp from "./DeletePopUp";
+import DeletePopUp from "../DeletePopUp";
 import useDeleteResume from "@/hooks/useDeleteResume";
 
 interface AnalysisRecordCardProps {
