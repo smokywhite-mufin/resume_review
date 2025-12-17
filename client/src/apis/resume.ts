@@ -2,6 +2,7 @@ import defaultInstance from "@/libs/axios";
 import {
   AnalyzeResponse,
   GetAllResumesResponse,
+  ResumeRaw,
   SuccessResponse,
   UploadResponse,
 } from "@/types";
@@ -64,5 +65,11 @@ export const deleteResume = async (
 // 이력서 전체 삭제 api
 export const deleteAllResumes = async (): Promise<SuccessResponse> => {
   const response = await defaultInstance.delete<SuccessResponse>("/resumes");
+  return response.data;
+};
+
+// 이력서 조회 api
+export const getResume = async (resumeId: number): Promise<ResumeRaw> => {
+  const response = await defaultInstance.get<ResumeRaw>(`/resumes/${resumeId}`);
   return response.data;
 };

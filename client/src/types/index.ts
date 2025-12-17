@@ -24,7 +24,7 @@ export type AnalyzeResult = {
 };
 
 export type QuestionList = {
-  "기술 질문": string[];
+  질문: string[];
 };
 
 export type AnalyzeResponse = {
