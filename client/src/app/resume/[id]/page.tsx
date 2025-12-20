@@ -91,57 +91,87 @@ export default function ResultPage() {
             <div className="bg-surface p-4 rounded-2xl shadow-drop">
               <div className="grid grid-cols-[auto_1fr] gap-x-8 gap-y-3 items-center text-sm font-medium">
                 <div className="text-ink-muted">이름</div>
-                <div>{resume.analyze_result?.이름}</div>
+                <div>{resume.analyze_result?.이름 || "-"}</div>
                 <div className="text-ink-muted">생년월일</div>
-                <div>{resume.analyze_result?.생년월일}</div>
+                <div>{resume.analyze_result?.생년월일 || "-"}</div>
                 <div className="text-ink-muted">이메일</div>
-                <div>{resume.analyze_result?.이메일}</div>
+                <div>{resume.analyze_result?.이메일 || "-"}</div>
                 <div className="text-ink-muted">연락처</div>
-                <div>{resume.analyze_result?.연락처}</div>
+                <div>{resume.analyze_result?.연락처 || "-"}</div>
                 <div className="text-ink-muted">Github</div>
                 <div>
-                  <a
-                    href={resume.analyze_result?.["깃허브 주소"] || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-brand hover:underline"
-                  >
-                    {resume.analyze_result?.["깃허브 주소"] || "-"}
-                  </a>
+                  {resume.analyze_result?.["깃허브 주소"] ? (
+                    <a
+                      href={resume.analyze_result["깃허브 주소"]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand hover:underline"
+                    >
+                      {resume.analyze_result["깃허브 주소"]}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
                 </div>
                 <div className="text-ink-muted">기타 링크</div>
-                <div>{resume.analyze_result?.["그 이외의 주소"] || "-"}</div>
+                <div>
+                  {resume.analyze_result?.["그 이외의 주소"] ? (
+                    <a
+                      href={resume.analyze_result["그 이외의 주소"]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand hover:underline"
+                    >
+                      {resume.analyze_result["그 이외의 주소"]}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </div>
               </div>
             </div>
           </section>
           <section>
             <p className="text-base font-bold my-4">강점 • 약점</p>
             <div className="grid grid-cols-2 gap-5 mt-4 bg-surface p-4 rounded-2xl shadow-drop">
-              <div className="bg-green-50 border border-[#E0F3EA] p-4 rounded-2xl">
-                <h2 className="font-bold text-sm mb-4">강점</h2>
-                <ul className="list-disc list-outside pl-5 space-y-2 text-sm font-medium">
-                  {resume.analyze_result?.강점.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-danger-bg border border-danger-border p-4 rounded-2xl">
-                <h2 className="font-bold text-sm mb-4">약점</h2>
-                <ul className="list-disc list-outside pl-5 space-y-2 text-sm font-medium">
-                  {resume.analyze_result?.취약점.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
+              {resume.analyze_result?.강점 &&
+                resume.analyze_result.강점.length > 0 && (
+                  <div className="bg-green-50 border border-[#E0F3EA] p-4 rounded-2xl">
+                    <h2 className="font-bold text-sm mb-4">강점</h2>
+                    <ul className="list-disc list-outside pl-5 space-y-2 text-sm font-medium">
+                      {resume.analyze_result.강점.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              {resume.analyze_result?.취약점 &&
+                resume.analyze_result.취약점.length > 0 && (
+                  <div className="bg-danger-bg border border-danger-border p-4 rounded-2xl">
+                    <h2 className="font-bold text-sm mb-4">약점</h2>
+                    <ul className="list-disc list-outside pl-5 space-y-2 text-sm font-medium">
+                      {resume.analyze_result.취약점.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
             </div>
           </section>
           <section>
             <p className="text-base font-bold my-4">기술 스택</p>
             <div className="bg-surface p-4 rounded-2xl shadow-drop">
               <div className="flex flex-wrap gap-2">
-                {resume.analyze_result?.기술스택.map((skill, index) => (
-                  <SkillComponent key={`${skill}-${index}`} skill={skill} />
-                ))}
+                {resume.analyze_result?.기술스택 &&
+                resume.analyze_result.기술스택.length > 0 ? (
+                  resume.analyze_result.기술스택.map((skill, index) => (
+                    <SkillComponent key={`${skill}-${index}`} skill={skill} />
+                  ))
+                ) : (
+                  <p className="text-sm text-ink-muted">
+                    기술스택 정보가 없습니다.
+                  </p>
+                )}
                 {Array.from({ length: 10 }).map((_, i) => (
                   <div key={`spacer-${i}`} className="grow h-0 p-0 m-0" />
                 ))}
@@ -151,13 +181,21 @@ export default function ResultPage() {
           <section>
             <p className="text-base font-bold my-4">경력 및 프로젝트</p>
             <div className="flex flex-col gap-5 mt-4 bg-surface p-4 rounded-2xl shadow-drop">
-              {resume.analyze_result?.경력.map((project, index) => (
-                <ProjectComponent
-                  key={index}
-                  projectName={project["프로젝트 이름"]}
-                  roles={project["담당 역할"]}
-                />
-              ))}
+              {resume.analyze_result?.경력 &&
+              resume.analyze_result.경력.length > 0 ? (
+                resume.analyze_result.경력.map(
+                  (project: any, index: number) => (
+                    <ProjectComponent
+                      key={index}
+                      projectName={project["프로젝트 이름"]}
+                      period={project["기간"]}
+                      roles={project["담당 역할"]}
+                    />
+                  ),
+                )
+              ) : (
+                <p className="text-sm text-ink-muted">경력 정보가 없습니다.</p>
+              )}
             </div>
           </section>
           <section>

@@ -7,20 +7,21 @@ export type UploadResponse = {
 };
 
 export type AnalyzeResult = {
-  이름: string;
-  생년월일: string;
-  이메일: string;
-  연락처: string;
-  "깃허브 주소": string | null;
-  "그 이외의 주소": string | null;
-  기술스택: string[];
-  경력: {
+  이름?: string;
+  생년월일?: string;
+  이메일?: string;
+  연락처?: string;
+  "깃허브 주소"?: string | null;
+  "그 이외의 주소"?: string | null;
+  기술스택?: string[];
+  경력?: {
     "프로젝트 이름": string;
     "담당 역할": string[];
+    기간?: string;
   }[];
-  점수: number;
-  강점: string[];
-  취약점: string[];
+  점수?: number;
+  강점?: string[];
+  취약점?: string[];
 };
 
 export type QuestionList = {
