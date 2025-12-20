@@ -152,18 +152,21 @@ export const analyzeResume = async (
 
     const fullText = await pdfService.extractTextFromPdf(resume.file_path);
 
-    const analyzeResult = await aiService.callGroq([
-      {
-        role: "system",
-        content: RESUME_ANALYSIS_SYSTEM_PROMPT,
-      },
-      {
-        role: "user",
-        content: `이력서 내용:\n${fullText}
+    const analyzeResult = await aiService.callGroq(
+      [
+        {
+          role: "system",
+          content: RESUME_ANALYSIS_SYSTEM_PROMPT,
+        },
+        {
+          role: "user",
+          content: `이력서 내용:\n${fullText}
                   회사 요구사항: ${JOB_REQUIREMENTS}
                   `,
-      },
-    ]);
+        },
+      ],
+      0.6
+    );
     const analyzeResultJson = JSON.parse(analyzeResult);
 
     const questionList = await aiService.callGroq(
