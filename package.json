@@ -1,0 +1,11 @@
+{
+  "name": "resume-review",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:client": "pnpm -F client dev",
+    "dev:server": "pnpm -F server dev",
+    "build:client": "pnpm -F client build",
+    "build:server": "pnpm -F server build"
+  }
+}
